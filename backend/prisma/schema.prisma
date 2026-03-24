@@ -83,6 +83,7 @@ model Product {
   purchasePrice     Float?
   lowStockThreshold Float           @default(5)
   barcode           String?         @unique
+  link              String?
   notes             String?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt

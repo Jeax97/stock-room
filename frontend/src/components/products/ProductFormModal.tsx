@@ -31,6 +31,7 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
     purchasePrice: product?.purchasePrice?.toString() || '',
     lowStockThreshold: product?.lowStockThreshold?.toString() || '5',
     barcode: product?.barcode || '',
+    link: product?.link || '',
     notes: product?.notes || '',
   });
 
@@ -98,6 +99,7 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
         purchasePrice: form.purchasePrice ? Number(form.purchasePrice) : null,
         lowStockThreshold: Number(form.lowStockThreshold) || 5,
         barcode: form.barcode.trim() || null,
+        link: form.link.trim() || null,
         notes: form.notes.trim() || null,
       };
 
@@ -296,6 +298,12 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
         <div>
           <label className="label">Barcode</label>
           <input type="text" value={form.barcode} onChange={e => update('barcode', e.target.value)} className="input" placeholder="Codice a barre (opzionale)" />
+        </div>
+
+        {/* Link */}
+        <div>
+          <label className="label">Link</label>
+          <input type="url" value={form.link} onChange={e => update('link', e.target.value)} className="input" placeholder="https://esempio.com (opzionale)" />
         </div>
 
         {/* Notes */}

@@ -56,6 +56,7 @@ export interface Product {
   purchasePrice?: number | null;
   lowStockThreshold: number;
   barcode?: string | null;
+  link?: string | null;
   notes?: string | null;
   isLowStock?: boolean;
   createdAt: string;

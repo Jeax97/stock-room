@@ -102,7 +102,7 @@ export async function getProductByBarcode(req: Request, res: Response, next: Nex
 
 export async function createProduct(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, categoryId, subcategoryId, locationId, supplierId, unitOfMeasureId, quantity, purchasePrice, lowStockThreshold, barcode, notes } = req.body;
+    const { name, categoryId, subcategoryId, locationId, supplierId, unitOfMeasureId, quantity, purchasePrice, lowStockThreshold, barcode, link, notes } = req.body;
 
     if (!name || !categoryId || !unitOfMeasureId) {
       return res.status(400).json({ error: 'Nome, categoria e unità di misura sono obbligatori.' });
@@ -120,6 +120,7 @@ export async function createProduct(req: Request, res: Response, next: NextFunct
         purchasePrice: purchasePrice ? Number(purchasePrice) : null,
         lowStockThreshold: Number(lowStockThreshold) || 5,
         barcode: barcode || null,
+        link: link || null,
         notes: notes || null,
       },
       include: {
@@ -154,7 +155,7 @@ export async function createProduct(req: Request, res: Response, next: NextFunct
 export async function updateProduct(req: Request, res: Response, next: NextFunction) {
   try {
     const id = Number(req.params.id);
-    const { name, categoryId, subcategoryId, locationId, supplierId, unitOfMeasureId, purchasePrice, lowStockThreshold, barcode, notes } = req.body;
+    const { name, categoryId, subcategoryId, locationId, supplierId, unitOfMeasureId, purchasePrice, lowStockThreshold, barcode, link, notes } = req.body;
 
     const product = await prisma.product.update({
       where: { id },
@@ -168,6 +169,7 @@ export async function updateProduct(req: Request, res: Response, next: NextFunct
         ...(purchasePrice !== undefined && { purchasePrice: purchasePrice ? Number(purchasePrice) : null }),
         ...(lowStockThreshold !== undefined && { lowStockThreshold: Number(lowStockThreshold) }),
         ...(barcode !== undefined && { barcode: barcode || null }),
+        ...(link !== undefined && { link: link || null }),
         ...(notes !== undefined && { notes: notes || null }),
       },
       include: {

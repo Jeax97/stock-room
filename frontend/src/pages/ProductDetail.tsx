@@ -207,6 +207,13 @@ export default function ProductDetail() {
               </div>
             </div>
 
+            {product.link && (
+              <div className="mt-6">
+                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Link</p>
+                <a href={product.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block break-all">{product.link}</a>
+              </div>
+            )}
+
             {product.notes && (
               <div className="mt-6">
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">Note</p>
