@@ -222,8 +222,9 @@ export async function uploadProductPhoto(req: Request, res: Response, next: Next
       }
     }
 
-    // Resize image with sharp
-    const resizedFilename = `resized-${req.file.filename}`;
+    // Resize image with sharp — always output as .jpg
+    const baseName = path.parse(req.file.filename).name;
+    const resizedFilename = `resized-${baseName}.jpg`;
     const resizedPath = path.join(uploadDir, resizedFilename);
     await sharp(req.file.path)
       .resize(800, 800, { fit: 'inside', withoutEnlargement: true })

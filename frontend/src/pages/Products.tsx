@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Search, ScanBarcode, Filter, X, Package } from 'lucide-react';
+import { Plus, Search, ScanBarcode, Filter, X, Package, LayoutGrid, List } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getProducts, getCategories, getSubcategories as getSubcategoriesApi, getLocations, deleteProduct as deleteProductApi } from '@/services/api';
 import { Product, Category, Subcategory, Location } from '@/types';
@@ -27,6 +27,15 @@ export default function Products() {
   const [showScanner, setShowScanner] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
+    return (localStorage.getItem('stockroom-view-mode') as 'grid' | 'list') || 'grid';
+  });
+
+  const toggleViewMode = () => {
+    const next = viewMode === 'grid' ? 'list' : 'grid';
+    setViewMode(next);
+    localStorage.setItem('stockroom-view-mode', next);
+  };
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -118,6 +127,13 @@ export default function Products() {
             )}
           </div>
           <button
+            onClick={toggleViewMode}
+            className="btn-secondary btn-icon"
+            title={viewMode === 'grid' ? 'Passa a lista' : 'Passa a griglia'}
+          >
+            {viewMode === 'grid' ? <List className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
+          </button>
+          <button
             onClick={() => setShowFilters(!showFilters)}
             className={cn('btn-secondary btn-icon relative', showFilters && 'bg-primary-50 border-primary-300 dark:bg-primary-900/30')}
           >
@@ -181,6 +197,7 @@ export default function Products() {
           }
         />
       ) : (
+        viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {products.map(product => (
             <Link
@@ -219,6 +236,42 @@ export default function Products() {
             </Link>
           ))}
         </div>
+        ) : (
+        <div className="space-y-2">
+          {products.map(product => (
+            <Link
+              key={product.id}
+              to={`/prodotti/${product.id}`}
+              className="card overflow-hidden group cursor-pointer flex items-center gap-4 p-3"
+            >
+              <ProductPhoto photo={product.photo} name={product.name} size="sm" />
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors truncate">
+                  {product.name}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  {product.category.name}
+                  {product.subcategory && ` / ${product.subcategory.name}`}
+                  {product.location && ` — 📍 ${product.location.name}`}
+                </p>
+              </div>
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {product.purchasePrice != null && (
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300 hidden sm:inline">
+                    €{product.purchasePrice.toFixed(2)}
+                  </span>
+                )}
+                <span className={cn(
+                  'badge',
+                  product.isLowStock ? 'badge-red' : 'badge-green'
+                )}>
+                  {product.quantity} {product.unitOfMeasure.symbol}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+        )
       )}
 
       {/* Modals */}
