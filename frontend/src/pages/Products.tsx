@@ -10,6 +10,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import ProductFormModal from '@/components/products/ProductFormModal';
 import BarcodeScanner from '@/components/products/BarcodeScanner';
+import CategoryQuickFilter from '@/components/products/CategoryQuickFilter';
 import { cn } from '@/lib/utils';
 
 export default function Products() {
@@ -145,6 +146,15 @@ export default function Products() {
             )}
           </button>
         </div>
+
+        {/* Quick Category Filter */}
+        {categories.length > 0 && (
+          <CategoryQuickFilter
+            categories={categories}
+            selectedCategoryId={categoryId}
+            onCategoryChange={setCategoryId}
+          />
+        )}
 
         {showFilters && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
